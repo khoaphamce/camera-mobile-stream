@@ -11,7 +11,7 @@ const mqttClient = connectBroker();
 mqttClient.on("messageReceived", (message) => {
   console.log(message.payloadString);
 
-  if (message.topic == captureRequestTopic && message.payloadString == "request-image"){
+  if (message.topic == captureRequestTopic){
     takePicture(publishImage);
   }
 });

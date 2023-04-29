@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Button, Image } from "react-native";
+import { StyleSheet, Text, View, Button, Image, Dimensions } from "react-native";
 import { Camera } from "expo-camera";
 import * as fs from "expo-file-system";
 
 let cameraInstance = null;
+const { height, width } = Dimensions.get('window');
+const screenRatio = width/height;
 
 function CameraComponent(publishImage) {
   const [cameraPermission, setCameraPermission] = useState(null);
@@ -41,7 +43,7 @@ function CameraComponent(publishImage) {
           ref={(ref) => setCamera(ref)}
           style={cameraStyles.fixedRatio}
           type={type}
-          ratio={"1:1"}
+          ratio={"16:9"}
         />
       </View>
 
@@ -58,7 +60,7 @@ function CameraComponent(publishImage) {
 const takePicture = async (publishImage) => {
   if (cameraInstance) {
     const base64Image = await cameraInstance.takePictureAsync(
-      (options = { base64: true, quality: 0 })
+      (options = { base64: true, quality: 1, skipProcessing: false })
     );
     // base64Image = base64Image.replaceAll(" ","+")
     console.log("base64 image: ", typeof base64Image);
@@ -76,10 +78,11 @@ const cameraStyles = StyleSheet.create({
   cameraContainer: {
     flex: 1,
     flexDirection: "column",
+    alignItems: 'center'
   },
   fixedRatio: {
     flex: 1,
-    aspectRatio: 1,
+    aspectRatio: screenRatio-0.55,
   },
   button: {
     flex: 0.1,

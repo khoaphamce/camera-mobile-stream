@@ -1,8 +1,8 @@
 import { Client, Message } from "react-native-paho-mqtt";
 
-const connectUrl = "ws://192.168.1.74:8883/";
-const mqttBrokerId = "Iot_1";
-const captureRequestTopic = `${mqttBrokerId}/Capture`
+const connectUrl = "ws://192.168.137.172:8883/";
+const mqttBrokerId = "iot_1";
+const captureRequestTopic = `${mqttBrokerId}/capture`
 
 const myStorage = {
   setItem: (key, item) => {
@@ -49,8 +49,11 @@ function connectBroker() {
 }
 
 function publishImage(imageBuffer) {
-  let message = new Message(imageBuffer);
-  message.destinationName = "Image";
+  let messageJson = {}
+  messageJson["image"] = imageBuffer
+  messageJson["id"] = mqttBrokerId;
+  let message = new Message(JSON.stringify(messageJson));
+  message.destinationName = `image`;
 
   client.send(message);
 }
