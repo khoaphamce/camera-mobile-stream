@@ -1,8 +1,8 @@
 import { Client, Message } from "react-native-paho-mqtt";
 
-const connectUrl = "ws://192.168.137.172:8883/";
+const connectUrl = "ws://192.168.1.8:8883/";
 const mqttBrokerId = "iot_1";
-const captureRequestTopic = `${mqttBrokerId}/capture`
+const captureRequestTopic = `iot/capture`
 
 const myStorage = {
   setItem: (key, item) => {
@@ -16,7 +16,7 @@ const myStorage = {
 
 let option = {
   uri: connectUrl,
-  clientId: mqttBrokerId,
+  clientId: "camera_1",
   storage: myStorage,
 };
 
