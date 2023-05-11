@@ -1,6 +1,6 @@
 import { Client, Message } from "react-native-paho-mqtt";
 
-const connectUrl = "ws://192.168.137.172:8883/";
+const connectUrl = "ws://172.20.10.2:8883/";
 const mqttBrokerId = "iot_1";
 const captureRequestTopic = `${mqttBrokerId}/capture`
 

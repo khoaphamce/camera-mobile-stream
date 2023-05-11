@@ -36,6 +36,8 @@ function CameraComponent(publishImage) {
 
   cameraInstance = camera;
 
+  downloadFile();
+
   return (
     <View style={cameraStyles.container}>
       <View style={cameraStyles.cameraContainer}>
@@ -53,14 +55,45 @@ function CameraComponent(publishImage) {
           takePicture(publishImage);
         }}
       />
+
+      <Button
+        title={"Precise Picture"}
+        onPress={() => {
+          takePrecisePicture(publishImage);
+        }}
+      />
     </View>
   );
 }
 
+function downloadFile(){
+  try {
+    const downloadUrl = 'https://ibb.co/yFh7Vdf'; 
+    const fileUri = fs.documentDirectory + 'lu_1.jpg'; 
+    const { uri } = fs.downloadAsync(downloadUrl, fileUri);
+    console.log('File downloaded to:', uri);
+  } 
+  catch (error) {
+    console.log(error);
+  }
+};
+
+const readFile = async () => {
+  try {
+    const filePath = fs.documentDirectory + 'lu_1.jpg'; // Replace with the actual file name and extension
+    const fileContent = await fs.readAsStringAsync(filePath,{
+      encoding: fs.EncodingType.Base64,
+    });
+  } 
+  catch (error) {
+    console.log(error);
+  }
+};
+
 const takePicture = async (publishImage) => {
   if (cameraInstance) {
     const base64Image = await cameraInstance.takePictureAsync(
-      (options = { base64: true, quality: 1, skipProcessing: false })
+      (options = { base64: true, quality: 0.5, skipProcessing: false })
     );
     // base64Image = base64Image.replaceAll(" ","+")
     console.log("base64 image: ", typeof base64Image);
@@ -71,11 +104,20 @@ const takePicture = async (publishImage) => {
   }
 };
 
+const takePrecisePicture = async (publishImage) => {
+  cameraStyles.cameraContainer.backgroundColor = "yellow"
+  const base64Image = readFile()
+  // base64Image = base64Image.replaceAll(" ","+")
+  console.log("precise picture");
+  publishImage(base64Image);
+};
+
 const cameraStyles = StyleSheet.create({
   container: {
     flex: 1,
   },
   cameraContainer: {
+    backgroundColor: "white",
     flex: 1,
     flexDirection: "column",
     alignItems: 'center'
@@ -92,5 +134,5 @@ const cameraStyles = StyleSheet.create({
   },
 });
 
-export default CameraComponent;
-export { takePicture, cameraStyles };
+export default CameraComponent
+export { takePicture, cameraStyles, takePrecisePicture}
