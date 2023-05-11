@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button, Image, Dimensions } from "react-native";
 import { Camera } from "expo-camera";
+import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import * as fs from "expo-file-system";
 
 let cameraInstance = null;
@@ -63,11 +64,23 @@ const takePicture = async (publishImage) => {
       (options = { base64: true, quality: 1, skipProcessing: false })
     );
     // base64Image = base64Image.replaceAll(" ","+")
-    console.log("base64 image: ", typeof base64Image);
-    for (i in base64Image) {
-      console.log(i);
+    for (i in base64Image){
+      console.log(i)
     }
-    publishImage(base64Image.base64);
+    const manipResult = await manipulateAsync(
+      base64Image.uri,
+      [
+        {"resize":
+          {
+            height: 809, 
+            width: 1438
+          }
+        }
+      ],
+      { compress: 1, format: SaveFormat.JPEG, base64: true }
+    );
+    console.log("base64 image: ", typeof base64Image);
+    publishImage(manipResult.base64);
   }
 };
 
